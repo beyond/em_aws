@@ -123,8 +123,10 @@ module AWS
           rescue Timeout::Error, Errno::ETIMEDOUT => e
             response.timeout = true
           else
-            response.body = http_response.response
             response.status = http_response.response_header.status.to_i
+            if response.status < 300
+              response.body = http_response.response
+            end
             response.headers = http_response.response_header.raw.to_hash
           end
         end
